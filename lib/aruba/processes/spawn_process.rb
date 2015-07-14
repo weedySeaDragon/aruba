@@ -46,6 +46,10 @@ module Aruba
       #   Run code for process which was started
       def run!
         @process   = ChildProcess.build(*Shellwords.split(@cmd))
+
+        # Windows needs to prepend commands with 'cmd.exe /c' @see from https://github.com/jarib/childprocess/issues/59
+        @process = ChildProcess.build(*(Shellwords.split(@cmd).unshift("cmd.exe", "/c"))) if ChildProcess.windows?
+
         @out       = Tempfile.new("aruba-out")
         @err       = Tempfile.new("aruba-err")
         @exit_status = nil
