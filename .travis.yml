@@ -16,5 +16,8 @@ matrix:
   allow_failures:
   #- rvm: rbx
 
-install: script/bootstrap
+install:
+  - ruby -e puts(RUBY_PLATFORM)
+  - script/bootstrap
+
 script: cat Gemfile.lock
