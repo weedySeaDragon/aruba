@@ -67,9 +67,7 @@ task :show_ruby_info do
 end
 
 
-task :bundle_install => [ :ensure_bundler_ok, :show_ruby_info] do
-  Bundler.clean_system 'bundle install'
-end
+task :show_rbconfig => [ :ensure_bundler_ok, :show_ruby_info]
 
 
-task :default => :bundle_install
+task :default => :show_rbconfig

@@ -22,5 +22,5 @@ before_install:
   - gem --version
   - ruby --version
 
-install: "rake bundle_install"
 
+script: "bundle exec rake show_rbconfig"
