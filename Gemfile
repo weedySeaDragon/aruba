@@ -7,17 +7,14 @@ gemspec
 group :debug do
   gem 'pry', '~> 0.10.1'
 
-  # byebug* gems do not work on JRuby or Rubinius 2015-07-16
-  if RUBY_VERSION >= '1.9'
-    if RUBY_VERSION >= '2.0' && !defined?(JRUBY) && !defined?(RUBINIUS)
-      gem 'byebug', '~> 4.0.5'
-      gem 'pry-byebug', '~> 3.1.0'
-      gem 'pry-stack_explorer', '~> 0.4.9'
-
-    elsif RUBY_VERSION == '1.9' || defined?(JRUBY) || defined?(RUBINIUS)
-      gem 'debugger', '~> 1.6.8'
-      gem 'pry-debugger', '~> 0.2.3'
-    end
+  # byebug* gems do not work on JRuby or Rubinius 2015-07-16 = test opportunity
+  if RUBY_VERSION >= '2.0' && RUBY_PLATFORM !=~/(rbx|jruby)/
+    gem 'byebug', '~> 4.0.5'
+    gem 'pry-byebug', '~> 3.1.0'
+    gem 'pry-stack_explorer', '~> 0.4.9'
+  elsif RUBY_VERSION == '1.9'
+    gem 'debugger', '~> 1.6.8'
+    gem 'pry-debugger', '~> 0.2.3'
   end
 
   gem 'pry-doc', '~> 0.8.0'
@@ -72,7 +69,7 @@ group :development, :test do
   gem 'rspec', '~> 3.3.0'
   gem 'fuubar', '~> 2.0.0'
 
-  if RUBY_VERSION >= '1.9' || defined?(JRUBY) || defined?(RUBINIUS)
+  if RUBY_VERSION >= '1.9'
     gem 'cucumber', '~> 2.0'
 
     gem 'rubocop', '~> 0.32.0'
