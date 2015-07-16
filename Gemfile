@@ -7,19 +7,38 @@ gemspec
 group :debug do
   gem 'pry', '~> 0.10.1'
 
+  # byebug* gems do not work on JRuby or Rubinius 2015-07-16
   if RUBY_VERSION >= '1.9'
-    if RUBY_VERSION >= '2.0' || defined?(JRUBY) || defined?(RUBINIUS)
+    if RUBY_VERSION >= '2.0' && !defined?(JRUBY) && !defined?(RUBINIUS)
       gem 'byebug', '~> 4.0.5'
       gem 'pry-byebug', '~> 3.1.0'
       gem 'pry-stack_explorer', '~> 0.4.9'
 
-    elsif RUBY_VERSION == '1.9'
+    elsif RUBY_VERSION == '1.9' || defined?(JRUBY) || defined?(RUBINIUS)
       gem 'debugger', '~> 1.6.8'
       gem 'pry-debugger', '~> 0.2.3'
     end
   end
 
   gem 'pry-doc', '~> 0.8.0'
+
+=begin
+from Rails   rails/app_generator_test.rb
+https://github.com/rails/rails/blob/master/railties/test/generators/app_generator_test.rb
+
+also @see https://github.com/rails/rails/blob/master/railties/lib/rails/generators/rails/app/templates/Gemfile
+
+  def test_inclusion_of_a_debugger
+    run_generator
+    if defined?(JRUBY_VERSION) || RUBY_ENGINE == "rbx"
+      assert_file "Gemfile" do |content|
+        assert_no_match(/byebug/, content)
+      end
+    else
+      assert_gem 'byebug'
+    end
+  end
+=end
 
 =begin
   platform :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
