@@ -6,6 +6,7 @@ gemspec
 # Debug aruba
 group :debug do
   gem 'pry', '~> 0.10.1'
+  gem 'pry-doc', '~> 0.8.0'
 
   if RUBY_VERSION >= '1.9'
     if RUBY_VERSION >= '2.0' || defined?(JRUBY) || defined?(RUBINIUS)
@@ -19,22 +20,22 @@ group :debug do
     end
   end
 
-  gem 'pry-doc', '~> 0.8.0'
 
 =begin
-  platform :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  #platform :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     gem 'byebug', '~> 4.0.5'
     gem 'pry-byebug', '~> 3.1.0'
-  end
+  #end
 
+  #platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
   platform :ruby_19 do
     gem 'debugger', '~> 1.6.8'
     gem 'pry-debugger', '~> 0.2.3'
   end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  #platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     gem 'pry-stack_explorer', '~> 0.4.9'
-  end
+  #end
 
   gem 'pry-doc', '~> 0.8.0'
 
@@ -65,6 +66,7 @@ group :development, :test do
 
     # Upload documentation
     gem 'relish', '~> 0.7.1'
+
     # Reporting
     gem 'bcat', '~> 0.6.2'
     gem 'kramdown', '~> 1.7.0'
@@ -78,7 +80,7 @@ group :development, :test do
     # Reporting
     gem 'bcat', '~> 0.6.2'
     gem 'kramdown', '~> 1.7.0'
-  end
+  #end
 
   # Code Coverage
   gem 'simplecov', '~> 0.10'
@@ -96,23 +98,23 @@ group :development, :test do
   end
 
   # Make aruba compliant to ruby community guide
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  #platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     gem 'rubocop', '~> 0.32.0'
-  end
+  #end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  #platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     gem 'cucumber-pro', '~> 0.0'
-  end
+  #end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  #platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     # License compliance
     gem 'license_finder', '~> 2.0.4'
-  end
+  #end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  #platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     # Upload documentation
     gem 'relish', '~> 0.7.1'
-  end
+  #end
 =end
 end
 
