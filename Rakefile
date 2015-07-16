@@ -22,7 +22,7 @@ RSpec::Core::RakeTask.new do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
   spec.rspec_opts = ['--color', '--format documentation']
 end
-
+=begin
 if RUBY_VERSION < '1.9'
   begin
     require 'rubocop/rake_task'
@@ -35,8 +35,15 @@ else
   require 'rubocop/rake_task'
   RuboCop::RakeTask.new
 end
+=end
 
 desc "Run tests, both RSpec and Cucumber"
 task :test => [ :rubocop, :spec, :cucumber, :cucumber_wip]
 
-task :default => :test
+desc 'check to see how versions are reported with rubys other than MRI'
+task :versions_check
+  puts "\n Checking Ruby version =#{RUBY_VERSION}=\n\n"
+
+
+#task :default => :test
+task :default => :versions_check
