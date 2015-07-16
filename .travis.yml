@@ -22,5 +22,5 @@ before_install:
   - gem --version
   - ruby --version
 
-install: "bundle exec rake bundle_install"
+install: "rake bundle_install"
 
