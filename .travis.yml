@@ -17,4 +17,4 @@ matrix:
   - rvm: rbx
 
 install: script/bootstrap
-script: bundle exec rake -f gemfile_check.rake gemfile_check
+script: cat Gemfile.lock
