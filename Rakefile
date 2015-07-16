@@ -64,6 +64,7 @@ task :ensure_bundler_ok => [:ensure_bundler_version, :ensure_bundler_no_coc_prom
 task :show_ruby_info do
   puts "\n RUBY_VERSION =#{RUBY_VERSION}="
   puts "\n RUBY_PLATFORM =#{RUBY_PLATFORM}="
+  puts "\n RUBY_ENGINE =#{RUBY_ENGINE}="
 end
 
 

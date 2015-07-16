@@ -8,7 +8,7 @@ group :debug do
   gem 'pry', '~> 0.10.1'
 
   # byebug* gems do not work on JRuby or Rubinius 2015-07-16 = test opportunity
-  if RUBY_VERSION >= '2.0' && RUBY_PLATFORM !=~/(rbx|jruby)/
+  if RUBY_VERSION >= '2.0' && (RUBY_PLATFORM !=~ /(java)/ &&  RUBY_ENGINE !=~ /(rbx)/ )
     gem 'byebug', '~> 4.0.5'
     gem 'pry-byebug', '~> 3.1.0'
     gem 'pry-stack_explorer', '~> 0.4.9'
