@@ -84,7 +84,7 @@ group :development, :test do
     gem 'bcat', '~> 0.6.2'
     gem 'kramdown', '~> 1.7.0'
 
-  elsif RUBY_VERSION < '1.9'
+  elsif RUBY_VERSION < '1.9.3'
     gem 'cucumber', '~> 1.3.20'
   end
 
