@@ -21,6 +21,7 @@ before_install:
   - bundle --version
   - gem --version
   - ruby --version
-
+  - ruby -e puts "#{RUBY_ENGINE}"
+  - ruby -e puts "#{RUBY_PLATFORM}"
 
 script: "bundle exec rake show_rbconfig"
