@@ -1,5 +1,3 @@
-require 'aruba/cucumber'
-
 Feature: The Gemfile can handle a variety of platforms and ruby versions.
 
 Given that Aruba will run on many different platforms and with many different ruby versions,
