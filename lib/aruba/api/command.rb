@@ -279,7 +279,6 @@ module Aruba
                      else
                        aruba.config.main_class
                      end
-
         command = Command.new(
           cmd,
           :mode              => mode,
@@ -344,7 +343,7 @@ module Aruba
       #   Timeout for execution
       def run_simple(cmd, fail_on_error = true, timeout = nil)
         command = run(cmd, timeout)
-        @last_exit_status = command.stop(announcer)
+        @last_exit_status = process_monitor.stop_process(command)
 
         @timed_out = command.timed_out?
 
@@ -368,6 +367,11 @@ module Aruba
         last_command.close_io(:stdin)
       end
 
+      # Only processes
+      def only_processes
+        process_monitor.only_processes
+      end
+
       # TODO: move some more methods under here!
 
       private
@@ -377,7 +381,7 @@ module Aruba
       end
 
       def stop_process(process)
-        process_monitor.stop_process(process)
+        @last_exit_status = process_monitor.stop_process(process)
       end
 
       def terminate_process(process)

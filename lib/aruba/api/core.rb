@@ -4,6 +4,7 @@ require 'aruba/runtime'
 require 'aruba/errors'
 
 require 'aruba/config/jruby'
+require 'aruba/aruba_logger'
 
 module Aruba
   module Api
@@ -121,6 +122,10 @@ module Aruba
 
         fail ArgumentError, message unless file_name.is_a?(String) && !file_name.empty?
 
+        # rubocop:disable Metrics/LineLength
+        aruba.logger.warn %(`aruba`'s working directory does not exist. Maybe you forgot to run `setup_aruba` before using it's API. This warning will be an error from 1.0.0) unless Aruba::Platform.directory? File.join(aruba.config.root_directory, aruba.config.working_directory)
+        # rubocop:enable Metrics/LineLength
+
         if RUBY_VERSION < '1.9'
           prefix = file_name.chars.to_a[0]
           rest = file_name.chars.to_a[1..-1].join('')
@@ -132,15 +137,17 @@ module Aruba
         if aruba.config.fixtures_path_prefix == prefix
           File.join aruba.fixtures_directory, rest
         elsif '~' == prefix
-          with_environment do
-            path = aruba.config.home_directory
-
-            fail 'Expanding "~/" to "/" is not allowed' if path == '/'
-
-            Aruba::Platform.chdir(path) { Aruba::Platform.expand_path(file_name, dir_string) }
+          path = with_environment do
+            ArubaPath.new(File.expand_path(file_name))
           end
+
+          fail 'Expanding "~/" to "/" is not allowed' if path.to_s == '/'
+          fail %(Expanding "~/" to a relative path "#{path}" is not allowed) unless path.absolute?
+
+          path.to_s
         else
-          Aruba::Platform.chdir(File.join(aruba.root_directory, aruba.current_directory)) { Aruba::Platform.expand_path(file_name, dir_string) }
+          directory = File.join(aruba.root_directory, aruba.current_directory)
+          ArubaPath.new(File.join(*[directory, dir_string, file_name].compact)).expand_path.to_s
         end
       end
       # rubocop:enable Metrics/MethodLength

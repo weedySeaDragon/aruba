@@ -1,5 +1,18 @@
 # Latest Release
 
+## [v0.8.1](https://github.com/cucumber/aruba/compare/v0.8.0...v0.8.1)
+
+* Fix problem if working directory of aruba does not exist (issue #286)
+* Re-Add removed method only_processes
+* Fixed problem with last exit status
+* Added appveyor to run tests of aruba on Windows (issue #287)
+* Make the home directory configurable and use Around/around-hook to apply it
+* Add announcer to output the full environment before a command is run
+* Use prepend_environment_variable to modify PATH for rspec integration
+* Add VERSION-constant to aruba and use it for code which should be activated on >= 1.0.0
+
+# Old releases
+
 ## [v0.8.0](https://github.com/cucumber/aruba/compare/v0.8.0.pre3...v0.8.0)
 * Build with cucumber 1.3.x on ruby 1.8.7, with cucumber 2.x on all other platforms
 * Fixed bugs in aruba's cucumber steps
@@ -8,11 +21,10 @@
 * Fixed checks for file content
 * Fixed selectors for DebugProcess and InProcess to support sub-classes as well
 
-# Old releases
 
 ## [v0.8.0.pre3](https://github.com/cucumber/aruba/compare/v0.8.0.pre2...v0.8.0.pre3)
 * Depend on cucumber 1.3.x for compatibility on ruby 1.8.7
-* Change PWD and OLDPW when `cd('path')` or `cd('path') {}` is used
+* Change PWD and OLDPW when `cd('path') {}` is used within that block
 * Make nesting of `cd` possible
 * Make `run` inside `cd` possible
 * Fixed some bugs
@@ -336,14 +348,13 @@
 # Upcoming un-released versions
 
 ## [v0.9.0](https://github.com/cucumber/aruba/compare/v0.8.0...v0.9.0)
-* Make the home directory configurable and use Around/around-hook to apply it
-* Add announcer to output the full environment before a command is run
-* Use prepend_environment_variable to modify PATH for rspec integration
-* Add VERSION-constant to aruba and use it for code which should be activated on >= 1.0.0
+
+* Improve documentation for filesystem api and move it to feature tests
+* Add logger to aruba. Its output can be captured by rspec.
 
 ## [v1.0.0](https://github.com/cucumber/aruba/compare/v0.11.0...v1.0.0)
 
-* "ruby 1.8.7"-support is discontinued.
+* Support for rubies older than 1.9.3 is discontinued - e.g 1.8.7 and 1.9.2
 * aruba requires "cucumber 2" for the feature steps. The rest of aruba should
   be usable by whatever testing framework you are using.
 * Overwriting methods for configuration is discontinued. You need to use

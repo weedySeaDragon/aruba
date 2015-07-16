@@ -38,7 +38,6 @@ also @see https://github.com/rails/rails/blob/master/railties/lib/rails/generato
 =end
 
 =begin
-  platform :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
     gem 'byebug', '~> 4.0.5'
     gem 'pry-byebug', '~> 3.1.0'
   end
@@ -48,7 +47,7 @@ also @see https://github.com/rails/rails/blob/master/railties/lib/rails/generato
     gem 'pry-debugger', '~> 0.2.3'
   end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx, :mingw_19, :mingw_20, :mingw_21, :mingw_22  do
     gem 'pry-stack_explorer', '~> 0.4.9'
   end
 
@@ -105,27 +104,27 @@ group :development, :test do
 
   # using platform for this make bundler complain about the same gem given
   # twice
-  if RUBY_VERSION < '1.9'
+  if RUBY_VERSION < '1.9.3'
     gem 'cucumber', '~> 1.3.20'
   else
     gem 'cucumber', '~> 2.0'
   end
 
   # Make aruba compliant to ruby community guide
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx, :mingw_19, :mingw_20, :mingw_21, :mingw_22  do
     gem 'rubocop', '~> 0.32.0'
   end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx, :mingw_19, :mingw_20, :mingw_21, :mingw_22  do
     gem 'cucumber-pro', '~> 0.0'
   end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx, :mingw_19, :mingw_20, :mingw_21, :mingw_22  do
     # License compliance
     gem 'license_finder', '~> 2.0.4'
   end
 
-  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx do
+  platform :ruby_19, :ruby_20, :ruby_21, :ruby_22, :jruby, :rbx, :mingw_19, :mingw_20, :mingw_21, :mingw_22  do
     # Upload documentation
     gem 'relish', '~> 0.7.1'
   end
