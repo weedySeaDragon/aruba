@@ -75,8 +75,7 @@ RSpec.describe Aruba::Platform do
                                           :windows? => false,
                                           :mac? => false,
                                           :solaris? => false,
-                                          :unix? => false)
-            .as_stubbed_const(:transfer_nested_constants => true)
+                                          :unix? => false).as_stubbed_const(:transfer_nested_constants => true)
   end
 
   describe 'detect the current operating system' do
