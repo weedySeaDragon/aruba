@@ -1,7 +1,7 @@
 sudo: false
 language: ruby
 script: script/test
-install: script/bootstrap --without development debug
+install: script/bootstrap
 rvm:
 - 2.2.2
 - 2.1.6
