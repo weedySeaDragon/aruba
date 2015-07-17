@@ -28,9 +28,13 @@ group :debug do
     gem 'pry-debugger', '~> 0.2.3'
   end
 
-  gem 'pry-doc', '~> 0.8.0'
+  gem 'pry-doc', '~> 0.8.0', :platforms => [:ruby, :jruby]  # pry-doc does not work for windows as of 2015-07-16
 
 =begin
+
+this is in pry-doc:/lib/pry-doc.rb
+if !Object.const_defined?(:RUBY_ENGINE) || RUBY_ENGINE !~ /rbx/
+
 from Rails   rails/app_generator_test.rb
 https://github.com/rails/rails/blob/master/railties/test/generators/app_generator_test.rb
 
