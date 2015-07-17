@@ -11,10 +11,18 @@ group :debug do
   # Note that for JRuby, RUBY_PLATFORM = java  and RUBY_ENGINE = jruby
   # Note that for Rubinius, RUBY_PLATFORM = <a unix platform:> and RUBY_ENGINE = rbx
 
-  if RUBY_VERSION >= '2.0' && !defined?(JRUBY_VERSION) && (RUBY_ENGINE !=~ /(rbx)/)
-    gem 'byebug', '~> 4.0.5'
-    gem 'pry-byebug', '~> 3.1.0'
-    gem 'pry-stack_explorer', '~> 0.4.9'
+  if RUBY_VERSION >= '2.0' && !defined?(JRUBY_VERSION) # && (RUBY_ENGINE !=~ /(rbx)/)
+=begin    platforms [:mri, :mswin, :mingw, :x64_mingw] do
+      gem 'byebug', '~> 4.0.5'
+      gem 'pry-byebug', '~> 3.1.0'
+      gem 'pry-stack_explorer', '~> 0.4.9'
+    end
+=end
+    install_if -> { RUBY_ENGINE !=~/rbx/ && RUBY_ENGINE !=~/jruby/ } do
+      gem 'byebug', '~> 4.0.5'
+      gem 'pry-byebug', '~> 3.1.0'
+      gem 'pry-stack_explorer', '~> 0.4.9'
+    end
   elsif RUBY_VERSION == '1.9'
     gem 'debugger', '~> 1.6.8'
     gem 'pry-debugger', '~> 0.2.3'
