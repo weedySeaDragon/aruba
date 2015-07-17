@@ -24,8 +24,5 @@ before_install:
   - echo $(ruby -e 'puts "RUBY_ENGINE =#{RUBY_ENGINE}="')
   - echo $(ruby -e 'puts "RUBY_PLATFORM =#{RUBY_PLATFORM}="')
   - echo $(ruby -e 'puts "RUBY_VERSION >= 2.0  = #{RUBY_VERSION.to_f >= 2.0}"')
-  - echo $(ruby -e 'puts " !defined?(JRUBY_VERSION) = #{!defined?(JRUBY_VERSION)}"')
-  - echo $(ruby -e 'puts "(RUBY_ENGINE !=~ /(rbx)/) = #{(RUBY_ENGINE !=~ /(rbx)/)}"')
-- echo $(ruby -e 'puts "RUBY_VERSION.to_f >= 2.0 && !defined?(JRUBY_VERSION) && (RUBY_ENGINE !=~ /(rbx)/)\n = #{RUBY_VERSION.to_f >= 2.0 && !defined?(JRUBY_VERSION) && (RUBY_ENGINE !=~ /(rbx)/)}"')
 
 script: "bundle exec rake show_rbconfig"
