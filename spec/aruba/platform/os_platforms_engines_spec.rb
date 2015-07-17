@@ -1,69 +1,34 @@
 require 'spec_helper'
 require 'aruba/platform'
 
-
 # These are not all possible operating systems, architectures, ruby platforms, or ruby engines.
 # These are just representative combinations.
 # I made some guesses for some of the operating systems and platforms, especially for mac and bsd
 
-def set_ruby_platform(ruby_platform)
+def ruby_platform(ruby_platform)
   stub_const('RUBY_PLATFORM', ruby_platform)
 end
 
-
-def set_ruby_engine(engine)
+def ruby_engine(engine)
   stub_const('RUBY_ENGINE', engine)
 end
 
-# FFI::Platform uses OS = case RbConfig::CONFIG['host_os'].downcase
-def set_os(host, ruby_platform)
-  @rb_config = double('rb_config')
-  allow(@rb_config).to receive(:[]).and_return(host)
-  stub_const 'RbConfig::CONFIG', @rb_config
-  set_ruby_platform(ruby_platform)
-end
-
-
 def use_jruby_engine
-  set_ruby_engine('jruby')
-  set_ruby_platform('java')
+  ruby_engine('jruby')
+  ruby_platform('java')
 end
 
-
-def use_rubinius_engine
-  set_ruby_engine('rbx')
+def use_rubinius_engine(ruby_platform)
+  ruby_engine('rbx')
+  ruby_platform(ruby_platform)
 end
 
-
-def use_mri_engine
-  set_ruby_engine('ruby')
+def use_mri_engine(ruby_platform)
+  ruby_engine('ruby')
+  ruby_platform(ruby_platform)
 end
 
-
-def set_as_windows_x64
-  set_os('mingw', 'x64-mingw32')
-end
-
-
-def set_as_mac_x64
-  set_os('darwin', 'x86_64-darwin-11')
-end
-
-
-def set_as_linux
-  set_os('linux', 'i686_linux')
-end
-
-
-def set_as_openbsd
-  set_os('openbsd', 'i686_openbsd')
-end
-
-
-def set_as_solaris
-  set_os('solaris', 'i686_linux')
-end
-
+#-----------------------------------
 
 RSpec.shared_examples 'JRuby installed' do
   it 'RUBY_ENGINE is correct' do
@@ -86,10 +51,8 @@ RSpec.shared_examples 'MRI installed' do
   end
 end
 
-# Aruba operating system, ruby platform and engine tester
-
+# Aruba::Platform test for changing the operating system, ruby platform and ruby engine
 RSpec.describe Aruba::Platform do
-
   before(:context) do
     RSpec.configure do |config|
       config.mock_with :rspec do |mocks|
@@ -107,26 +70,16 @@ RSpec.describe Aruba::Platform do
     end
   end
 
-
   before(:example) do
-=begin
-    @rb_config = double('rb_config')
-    allow(@rb_config).to receive(:[])
-    stub_const 'RbConfig::CONFIG', @rb_config, :transfer_nested_constants => true
-=end
-
-    @ffip  = class_double("FFI::Platform", :bsd? => false,
-                          :windows? => false,
-                          :mac? => false,
-                          :solaris? => false,
-                          :unix? => false).
-        as_stubbed_const(:transfer_nested_constants => true)
-
+    @ffip = class_double("FFI::Platform", :bsd? => false,
+                                          :windows? => false,
+                                          :mac? => false,
+                                          :solaris? => false,
+                                          :unix? => false)
+            .as_stubbed_const(:transfer_nested_constants => true)
   end
 
-
   describe 'os, ruby_platforms, and ruby_engines' do
-
     context 'when on linux' do
       before :each do
         allow(@ffip).to receive(:unix?).and_return(true)
@@ -150,7 +103,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some mri ruby' do
         before :each do
-          use_mri_engine
+          use_mri_engine('i686_linux')
         end
 
         it_behaves_like 'MRI installed'
@@ -162,7 +115,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some rubinius ruby' do
         before :each do
-          use_rubinius_engine
+          use_rubinius_engine('i686_linux')
         end
 
         it_behaves_like 'Rubinius installed'
@@ -177,7 +130,6 @@ RSpec.describe Aruba::Platform do
         end
         it_behaves_like "JRuby installed"
       end
-
     end
 
     context 'when on solaris' do
@@ -203,7 +155,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some mri ruby' do
         before :each do
-          use_mri_engine
+          use_mri_engine('i686_linux')
         end
 
         it_behaves_like 'MRI installed'
@@ -215,7 +167,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some rubinius ruby' do
         before :each do
-          use_rubinius_engine
+          use_rubinius_engine('i686_linux')
         end
 
         it_behaves_like 'Rubinius installed'
@@ -256,7 +208,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some mri ruby' do
         before :each do
-          use_mri_engine
+          use_mri_engine('i686_openbsd')
         end
 
         it_behaves_like 'MRI installed'
@@ -268,7 +220,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some rubinius ruby' do
         before :each do
-          use_rubinius_engine
+          use_rubinius_engine('i686_openbsd')
         end
 
         it_behaves_like 'Rubinius installed'
@@ -277,13 +229,13 @@ RSpec.describe Aruba::Platform do
           expect(RUBY_PLATFORM).to eq('i686_openbsd')
         end
       end
+
       context 'when some jruby' do
         before :each do
           use_jruby_engine
         end
         it_behaves_like "JRuby installed"
       end
-
     end
 
     context 'when on mac (darwin)' do
@@ -309,7 +261,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some mri ruby' do
         before :each do
-          use_mri_engine
+          use_mri_engine('x86_64-darwin-11')
         end
 
         it_behaves_like 'MRI installed'
@@ -321,7 +273,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some rubinius ruby' do
         before :each do
-          use_rubinius_engine
+          use_rubinius_engine('x86_64-darwin-11')
         end
 
         it_behaves_like 'Rubinius installed'
@@ -337,11 +289,9 @@ RSpec.describe Aruba::Platform do
         end
         it_behaves_like "JRuby installed"
       end
-
     end
 
     context 'when on windows' do
-
       before :each do
         allow(@ffip).to receive(:windows?).and_return(true)
       end
@@ -364,7 +314,7 @@ RSpec.describe Aruba::Platform do
 
       context 'when some mri ruby' do
         before :each do
-          use_mri_engine
+          use_mri_engine('x64-mingw32')
         end
 
         it_behaves_like 'MRI installed'
@@ -372,13 +322,12 @@ RSpec.describe Aruba::Platform do
         it 'RUBY_PLATFORM is correct' do
           expect(RUBY_PLATFORM).to eq('x64-mingw32')
         end
-
       end
 
-      # TODO Can this even happen?  Does rbx run on windows?
+      # TODO: Can this even happen?  Does rbx run on windows?
       context 'when some rubinius ruby' do
         before :each do
-          use_rubinius_engine
+          use_rubinius_engine('x64-mingw32')
         end
 
         it_behaves_like 'Rubinius installed'
@@ -394,10 +343,7 @@ RSpec.describe Aruba::Platform do
         end
 
         it_behaves_like "JRuby installed"
-
       end
     end
-
   end
-
 end
