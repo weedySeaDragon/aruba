@@ -5,7 +5,8 @@ version: "{build}"
 # and once for the merge commit that github creates for each mergable PR.
 branches:
   only:
-    - master
+    #- master
+    - 150714-wsd--Gemfile-check-versions-not-platforms
 
 # Disable normal Windows builds in favor of our test script.
 build: off
