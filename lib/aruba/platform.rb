@@ -270,7 +270,7 @@ module Aruba
       :unescape, \
       :getwd, \
       :which, \
-      :write_file,
+      :write_file, \
       :on_windows?, \
       :on_unix?, \
       :on_mac?, \
