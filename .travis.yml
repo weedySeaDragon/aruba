@@ -23,6 +23,6 @@ before_install:
   - ruby --version
   - echo $(ruby -e 'puts "RUBY_ENGINE =#{RUBY_ENGINE}="')
   - echo $(ruby -e 'puts "RUBY_PLATFORM =#{RUBY_PLATFORM}="')
-  - echo $(ruby -e 'puts "RUBY_VERSION >= 2.0  = #{RUBY_VERSION.to_f >= 2.0}"')
+
 
 script: "bundle exec rake show_rbconfig"
