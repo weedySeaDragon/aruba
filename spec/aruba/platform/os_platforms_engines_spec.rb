@@ -31,22 +31,22 @@ end
 #-----------------------------------
 
 RSpec.shared_examples 'JRuby installed' do
-  it 'RUBY_ENGINE is correct' do
+  it 'RUBY_ENGINE is jruby' do
     expect(RUBY_ENGINE).to eq('jruby')
   end
-  it 'RUBY_PLATFORM is correct' do
+  it 'RUBY_PLATFORM is java' do
     expect(RUBY_PLATFORM).to eq('java')
   end
 end
 
 RSpec.shared_examples 'Rubinius installed' do
-  it 'RUBY_ENGINE is correct' do
+  it 'RUBY_ENGINE is rbx' do
     expect(RUBY_ENGINE).to eq('rbx')
   end
 end
 
 RSpec.shared_examples 'MRI installed' do
-  it 'RUBY_ENGINE is correct' do
+  it 'RUBY_ENGINE is ruby' do
     expect(RUBY_ENGINE).to eq('ruby')
   end
 end
@@ -79,52 +79,52 @@ RSpec.describe Aruba::Platform do
             .as_stubbed_const(:transfer_nested_constants => true)
   end
 
-  describe 'os, ruby_platforms, and ruby_engines' do
-    context 'when on linux' do
+  describe 'detect the current operating system' do
+    context 'linux' do
       before :each do
         allow(@ffip).to receive(:unix?).and_return(true)
       end
 
-      it '#on_unix' do
+      it '#on_unix? is true' do
         expect(Aruba::Platform.on_unix?).to be true
       end
-      it '#on_mac' do
+      it '#on_mac? is false' do
         expect(Aruba::Platform.on_mac?).to be false
       end
-      it '#on_windows' do
+      it '#on_windows? is false' do
         expect(Aruba::Platform.on_windows?).to be false
       end
-      it '#on_bsd' do
+      it '#on_bsd? is false' do
         expect(Aruba::Platform.on_bsd?).to be false
       end
-      it '#on_solaris' do
+      it '#on_solaris? is false' do
         expect(Aruba::Platform.on_solaris?).to be false
       end
 
-      context 'when some mri ruby' do
+      context 'running MRI ruby' do
         before :each do
           use_mri_engine('i686_linux')
         end
 
         it_behaves_like 'MRI installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is i686_linux' do
           expect(RUBY_PLATFORM).to eq('i686_linux')
         end
       end
 
-      context 'when some rubinius ruby' do
+      context 'running Rubinius' do
         before :each do
           use_rubinius_engine('i686_linux')
         end
 
         it_behaves_like 'Rubinius installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is i686_linux' do
           expect(RUBY_PLATFORM).to eq('i686_linux')
         end
       end
-      context 'when some jruby' do
+      context 'running JRuby' do
         before :each do
           use_jruby_engine
         end
@@ -137,46 +137,46 @@ RSpec.describe Aruba::Platform do
         allow(@ffip).to receive(:solaris?).and_return(true)
       end
 
-      it '#on_unix' do
+      it '#on_unix? is false' do
         expect(Aruba::Platform.on_unix?).to be false
       end
-      it '#on_mac' do
+      it '#on_mac? is false' do
         expect(Aruba::Platform.on_mac?).to be false
       end
-      it '#on_windows' do
+      it '#on_windows? is false' do
         expect(Aruba::Platform.on_windows?).to be false
       end
-      it '#on_bsd' do
+      it '#on_bsd? is false' do
         expect(Aruba::Platform.on_bsd?).to be false
       end
-      it '#on_solaris' do
+      it '#on_solaris? is true' do
         expect(Aruba::Platform.on_solaris?).to be true
       end
 
-      context 'when some mri ruby' do
+      context 'running MRI ruby' do
         before :each do
-          use_mri_engine('i686_linux')
+          use_mri_engine('solaris')
         end
 
         it_behaves_like 'MRI installed'
 
-        it 'RUBY_PLATFORM is correct' do
-          expect(RUBY_PLATFORM).to eq('i686_linux')
+        it 'RUBY_PLATFORM is solaris' do
+          expect(RUBY_PLATFORM).to eq('solaris')
         end
       end
 
-      context 'when some rubinius ruby' do
+      context 'running Rubinius' do
         before :each do
-          use_rubinius_engine('i686_linux')
+          use_rubinius_engine('solaris')
         end
 
         it_behaves_like 'Rubinius installed'
 
-        it 'RUBY_PLATFORM is correct' do
-          expect(RUBY_PLATFORM).to eq('i686_linux')
+        it 'RUBY_PLATFORM is solaris' do
+          expect(RUBY_PLATFORM).to eq('solaris')
         end
       end
-      context 'when some jruby' do
+      context 'running JRuby' do
         before :each do
           use_jruby_engine
         end
@@ -190,47 +190,47 @@ RSpec.describe Aruba::Platform do
         allow(@ffip).to receive(:bsd?).and_return(true)
       end
 
-      it '#on_unix' do
+      it '#on_unix? is false' do
         expect(Aruba::Platform.on_unix?).to be false
       end
-      it '#on_mac' do
+      it '#on_mac? is false' do
         expect(Aruba::Platform.on_mac?).to be false
       end
-      it '#on_windows' do
+      it '#on_windows? is false' do
         expect(Aruba::Platform.on_windows?).to be false
       end
-      it '#on_bsd' do
+      it '#on_bsd? is true' do
         expect(Aruba::Platform.on_bsd?).to be true
       end
-      it '#on_solaris' do
+      it '#on_solaris? is false' do
         expect(Aruba::Platform.on_solaris?).to be false
       end
 
-      context 'when some mri ruby' do
+      context 'running MRI ruby' do
         before :each do
           use_mri_engine('i686_openbsd')
         end
 
         it_behaves_like 'MRI installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is i686_openbsd' do
           expect(RUBY_PLATFORM).to eq('i686_openbsd')
         end
       end
 
-      context 'when some rubinius ruby' do
+      context 'running Rubinius' do
         before :each do
           use_rubinius_engine('i686_openbsd')
         end
 
         it_behaves_like 'Rubinius installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is i686_openbsd' do
           expect(RUBY_PLATFORM).to eq('i686_openbsd')
         end
       end
 
-      context 'when some jruby' do
+      context 'running JRuby' do
         before :each do
           use_jruby_engine
         end
@@ -243,47 +243,47 @@ RSpec.describe Aruba::Platform do
         allow(@ffip).to receive(:mac?).and_return(true)
       end
 
-      it '#on_unix' do
+      it '#on_unix? is false' do
         expect(Aruba::Platform.on_unix?).to be false
       end
-      it '#on_mac' do
+      it '#on_mac? is true' do
         expect(Aruba::Platform.on_mac?).to be true
       end
-      it '#on_windows' do
+      it '#on_windows? is false' do
         expect(Aruba::Platform.on_windows?).to be false
       end
-      it '#on_bsd' do
+      it '#on_bsd? is false' do
         expect(Aruba::Platform.on_bsd?).to be false
       end
-      it '#on_solaris' do
+      it '#on_solaris? is false' do
         expect(Aruba::Platform.on_solaris?).to be false
       end
 
-      context 'when some mri ruby' do
+      context 'running MRI ruby' do
         before :each do
           use_mri_engine('x86_64-darwin-11')
         end
 
         it_behaves_like 'MRI installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is x86_64-darwin-11' do
           expect(RUBY_PLATFORM).to eq('x86_64-darwin-11')
         end
       end
 
-      context 'when some rubinius ruby' do
+      context 'running Rubinius' do
         before :each do
           use_rubinius_engine('x86_64-darwin-11')
         end
 
         it_behaves_like 'Rubinius installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is x86_64-darwin-11' do
           expect(RUBY_PLATFORM).to eq('x86_64-darwin-11')
         end
       end
 
-      context 'when some jruby' do
+      context 'running JRuby' do
         before :each do
           use_jruby_engine
         end
@@ -296,48 +296,48 @@ RSpec.describe Aruba::Platform do
         allow(@ffip).to receive(:windows?).and_return(true)
       end
 
-      it '#on_unix' do
+      it '#on_unix? is false' do
         expect(Aruba::Platform.on_unix?).to be false
       end
-      it '#on_mac' do
+      it '#on_mac? is false' do
         expect(Aruba::Platform.on_mac?).to be false
       end
-      it '#on_windows' do
+      it '#on_windows? is true' do
         expect(Aruba::Platform.on_windows?).to be true
       end
-      it '#on_bsd' do
+      it '#on_bsd? is false' do
         expect(Aruba::Platform.on_bsd?).to be false
       end
-      it '#on_solaris' do
+      it '#on_solaris? is false' do
         expect(Aruba::Platform.on_solaris?).to be false
       end
 
-      context 'when some mri ruby' do
+      context 'running MRI ruby' do
         before :each do
           use_mri_engine('x64-mingw32')
         end
 
         it_behaves_like 'MRI installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is x64-mingw32' do
           expect(RUBY_PLATFORM).to eq('x64-mingw32')
         end
       end
 
       # TODO: Can this even happen?  Does rbx run on windows?
-      context 'when some rubinius ruby' do
+      context 'running Rubinius' do
         before :each do
           use_rubinius_engine('x64-mingw32')
         end
 
         it_behaves_like 'Rubinius installed'
 
-        it 'RUBY_PLATFORM is correct' do
+        it 'RUBY_PLATFORM is x64-mingw32' do
           expect(RUBY_PLATFORM).to eq('x64-mingw32')
         end
       end
 
-      context 'when some jruby' do
+      context 'running JRuby' do
         before :each do
           use_jruby_engine
         end
