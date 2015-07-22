@@ -201,19 +201,19 @@ Feature: file system commands
     Given an empty file named "a/b/c/d.txt"
 
   Scenario: Change mode of empty file
-    Given an empty file named "test.txt" with mode "0666"
-    Then the mode of filesystem object "test.txt" should match "0666"
+    Given an empty file named "test.txt" with mode "0644"
+    Then the mode of filesystem object "test.txt" should match "0644"
 
   Scenario: Change mode of a directory
-    Given a directory named "test.d" with mode "0666"
-    Then the mode of filesystem object "test.d" should match "0666"
+    Given a directory named "test.d" with mode "0755"
+    Then the mode of filesystem object "test.d" should match "0755"
 
   Scenario: Change mode of file
-    Given a file named "test.txt" with mode "0666" and with:
+    Given a file named "test.txt" with mode "0644" and with:
     """
     asdf
     """
-    Then the mode of filesystem object "test.txt" should match "0666"
+    Then the mode of filesystem object "test.txt" should match "0644"
 
   Scenario: Use a fixture
     Given I use a fixture named "fixtures-app"
