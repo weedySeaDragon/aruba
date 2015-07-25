@@ -72,7 +72,6 @@ module Aruba
           if found && Aruba.platform.executable_file?(found)
             found.tr!(File::SEPARATOR, File::ALT_SEPARATOR)
             command = fixup_cmd(found)
-            puts "\n command = #{command}\n"
             return command
           end
         end
