@@ -22,5 +22,7 @@ else
   Dir.glob(::File.expand_path('../support/**/*.rb', __FILE__)).each { |f| require_relative f }
 end
 
+WINDOWS = FFI::Platform.windows?
+
 # Avoid writing "describe LocalPac::MyClass do [..]" but "describe MyClass do [..]"
 include Aruba

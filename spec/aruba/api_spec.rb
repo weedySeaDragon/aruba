@@ -49,7 +49,7 @@ describe Aruba::Api  do
       it { expect(all_paths).to include expand_path(name) }
     end
 
-    context 'when nothing exist' do
+    context 'when nothing exist' do      # FIXME: need to first delete all paths/folders/dirs
       it { expect(all_paths).to eq [] }
     end
   end
@@ -794,14 +794,14 @@ describe Aruba::Api  do
       end
     end
 
-    describe '#filesystem_permissions' do
+    describe '#filesystem_permissions', :unless => WINDOWS do
       def actual_permissions
         format( "%o" , File::Stat.new(file_path).mode )[-4,4]
       end
 
       let(:file_name) { @file_name }
       let(:file_path) { @file_path }
-      let(:permissions) { '0655' }
+      let(:permissions) { '0666' }
 
       before :each do
         @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
@@ -816,16 +816,16 @@ describe Aruba::Api  do
       end
 
       context 'when file exists' do
-        context 'and permissions are given as string' do
+        context 'and permissions are given as string', :unless => WINDOWS do
           it { expect(actual_permissions).to eq('0655') }
         end
 
-        context 'and permissions are given as octal number' do
+        context 'and permissions are given as octal number', :unless => WINDOWS do
           let(:permissions) { 0655 }
           it { expect(actual_permissions).to eq('0655') }
         end
 
-        context 'and path has ~ in it' do
+        context 'and path has ~ in it', :unless => WINDOWS do
           let(:path) { random_string }
           let(:file_name) { File.join('~', path) }
           let(:file_path) { File.join(@aruba.aruba.current_directory, path) }
@@ -855,17 +855,17 @@ describe Aruba::Api  do
 
       context 'when file exists' do
         context 'and should have permissions' do
-          context 'and permissions are given as string' do
+          context 'and permissions are given as string', :unless => WINDOWS do
             it { @aruba.check_filesystem_permissions(permissions, file_name, true) }
           end
 
-          context 'and permissions are given as octal number' do
+          context 'and permissions are given as octal number', :unless => WINDOWS do
             let(:permissions) { 0666 }
 
             it { @aruba.check_filesystem_permissions(permissions, file_name, true) }
           end
 
-          context 'and path includes ~' do
+          context 'and path includes ~', :unless => WINDOWS do
             let(:string) { random_string }
             let(:file_name) { File.join('~', string) }
             let(:file_path) { File.join(@aruba.aruba.current_directory, string) }
@@ -873,7 +873,7 @@ describe Aruba::Api  do
             it { @aruba.check_filesystem_permissions(permissions, file_name, true) }
           end
 
-          context 'but fails because the permissions are different' do
+          context 'but fails because the permissions are different', :unless => WINDOWS do
             let(:expected_permissions) { 0666 }
 
             it { expect { @aruba.check_filesystem_permissions(expected_permissions, file_name, true) }.to raise_error }
@@ -881,13 +881,13 @@ describe Aruba::Api  do
         end
 
         context 'and should not have permissions' do
-          context 'and succeeds when the difference is expected and permissions are different' do
+          context 'and succeeds when the difference is expected and permissions are different', :unless => WINDOWS do
             let(:different_permissions) { 0666 }
 
             it { @aruba.check_filesystem_permissions(different_permissions, file_name, false) }
           end
 
-          context 'and fails because the permissions are the same although they should be different' do
+          context 'and fails because the permissions are the same although they should be different', :unless => WINDOWS do
             let(:different_permissions) { 0655 }
 
             it { expect { @aruba.check_filesystem_permissions(different_permissions, file_name, false) }.to raise_error }
@@ -936,7 +936,7 @@ describe Aruba::Api  do
         @aruba.check_file_presence([ /test123/, 'asdf' ], false )
       end
 
-      it "works with ~ in path name" do
+      it "works with ~ in path name" do  # TODO: HOME likely won't have ~ on Windows
         file_path = File.join('~', random_string)
 
         @aruba.with_environment 'HOME' => File.expand_path(@aruba.aruba.current_directory) do

@@ -92,7 +92,7 @@ RSpec.describe Aruba::ArubaPath do
     it { expect(path).to be_absolute }
   end
 
-  describe '#blocks' do
+  describe '#blocks', :unless => WINDOWS do
     let(:new_path) { expand_path('path/to/file') }
 
     before(:each) { FileUtils.mkdir_p File.dirname(new_path) }
