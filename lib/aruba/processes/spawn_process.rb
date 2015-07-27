@@ -41,16 +41,11 @@ module Aruba
       #   Run code for process which was started
       #
       # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/CyclomaticComplexity
       def run!
-        # gather fully qualified path
-        cmd = which(command)
+        command_args = Aruba.platform.child_process_args(commandline)
 
-        # rubocop:disable  Metrics/LineLength
-        fail LaunchError, %(Command "#{command}" not found in PATH-variable "#{environment['PATH']}".) unless cmd
-        # rubocop:enable  Metrics/LineLength
+        @process   = ChildProcess.build(*command_args)
 
-        @process   = ChildProcess.build(cmd, *arguments)
         @out       = Tempfile.new("aruba-out")
         @err       = Tempfile.new("aruba-err")
         @exit_status = nil
@@ -76,7 +71,6 @@ module Aruba
         yield self if block_given?
       end
       # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       def stdin
         @process.io.stdin
