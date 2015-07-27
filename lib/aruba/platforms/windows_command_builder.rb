@@ -17,13 +17,13 @@ module Aruba
     #   process = ChildProcess.build("cmd.exe", "/c", "echo 'Hello World'")
     #
     class WindowsCommandBuilder < ProcessCommandBuilder
-
       # note that ChildProcess expects Windows commands to have 'cmd.exe /c ' at the start
       # in order to run the command in a separated process
       #
       # @return [Array] of Strings suitable for passing to ChildProcess.build(*)
       def build_child_process_args(command_with_path, *args)
-        (%w[cmd.exe /c] + [command_with_path] + args).flatten
+        args.reject! {|x| x.nil?}
+        args.empty? ? %w[cmd.exe /c] + [command_with_path] : (%w[cmd.exe /c] + [command_with_path] + args).flatten
       end
     end
   end

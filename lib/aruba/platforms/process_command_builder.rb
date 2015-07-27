@@ -26,7 +26,6 @@ module Aruba
       def build_child_process_args(command_with_path, *args)
         ([command_with_path] + args).flatten
       end
-
     end
   end
 end
