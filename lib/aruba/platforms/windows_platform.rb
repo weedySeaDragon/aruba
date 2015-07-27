@@ -1,6 +1,7 @@
-require 'aruba/platforms/unix_platform'
+require 'aruba/platforms/abstract_os_platform'
 require 'ffi'
 require 'aruba/platforms/windows_environment_vars'
+require 'aruba/platforms/windows_command_builder'
 
 module Aruba
   # This abstracts OS-specific things
@@ -12,7 +13,13 @@ module Aruba
     # any further notice.
     #
     # This includes all methods for the Windows platform
-    class WindowsPlatform < UnixPlatform
+    class WindowsPlatform < AbstractOSPlatform
+      attr_reader :command_builder
+
+      def initialize
+        @command_builder = WindowsCommandBuilder.new
+      end
+
       def self.match?
         FFI::Platform.windows?
       end
@@ -65,27 +72,18 @@ module Aruba
           file = file.tr("\\", "/")
           file += path_exts if File.extname(program).empty?
 
-
           found = Dir[file].first
 
           # Convert all forward slashes to backslashes if supported
           if found && Aruba.platform.executable_file?(found)
             found.tr!(File::SEPARATOR, File::ALT_SEPARATOR)
-            command = fixup_cmd(found)
-            return command
+            return found
           end
         end
-
         nil
       end
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/CyclomaticComplexity
-
-
-      def fixup_cmd(command)
-        command = %w[cmd.exe /c] + [command]
-      end
-
     end
   end
 end
