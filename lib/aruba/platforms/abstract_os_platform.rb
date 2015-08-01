@@ -31,7 +31,7 @@ module Aruba
         fail LaunchError, %(Command "#{cmd}" not found in PATH-variable "#{environment_variables['PATH']}".) unless command_with_path
 
         args = command_builder.command_args(command_line)
-        args.reject! {|x| x.nil?} unless args.nil?  # remove any nil (empty) args
+        args.reject!(&:nil?) unless args.nil?  # remove any nil (empty) args
 
         command_builder.build_child_process_args(which(cmd), args)
       end

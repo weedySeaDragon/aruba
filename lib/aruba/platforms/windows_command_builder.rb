@@ -22,7 +22,7 @@ module Aruba
       #
       # @return [Array] of Strings suitable for passing to ChildProcess.build(*)
       def build_child_process_args(command_with_path, *args)
-        args.reject! {|x| x.nil?}
+        args.reject!(&:nil?)
         args.empty? ? %w[cmd.exe /c] + [command_with_path] : (%w[cmd.exe /c] + [command_with_path] + args).flatten
       end
 
@@ -44,24 +44,29 @@ module Aruba
         return command_parts[1..-1] if command_parts.size > 1
       end
 
+      # based on Shellwords.split
+      # this method may not be needed; it's here to try to figure out if we can get double-quotes and
+      # single-quotes working with Windows
+      # rubocop:disable Metrics/CyclomaticComplexity
       def split_command(line)
-          words = []
-          field = ''
-          line.scan(/\G\s*(?>([^\s\\\'\"]+)|'([^\']*)'|"((?:[^\"\\]|\\.)*)"|(\\.?)|(\S))(\s|\z)?/m) do
-          |word, sq, dq, esc, garbage, sep|
-            raise ArgumentError, "Unmatched double quote: #{line.inspect}" if garbage
-            field << (word || sq || (dq || esc).gsub(/\\(.)/, '\\1'))
-            field = "\"#{dq}\"" if dq
-            field = "'#{sq}'" if sq
-            if sep
-              words << field
-              field = ''
-            end
+        words = []
+        field = ''
+        # rubocop:disable Style/MultilineBlockLayout
+        line.scan(/\G\s*(?>([^\s\\\'\"]+)|'([^\']*)'|"((?:[^\"\\]|\\.)*)"|(\\.?)|(\S))(\s|\z)?/m) do
+           |word, sq, dq, esc, garbage, sep|
+          # rubocop:endable Style/MultilineBlockLayout
+          raise ArgumentError, "Unmatched double quote: #{line.inspect}" if garbage
+          field << (word || sq || (dq || esc).gsub(/\\(.)/, '\\1'))
+          field = "\"#{dq}\"" if dq
+          field = "'#{sq}'" if sq
+          if sep
+            words << field
+            field = ''
           end
-          words
-
+        end
+        words
       end
-
+      # rubocop:enable Metrics/CyclomaticComplexity
     end
   end
 end
