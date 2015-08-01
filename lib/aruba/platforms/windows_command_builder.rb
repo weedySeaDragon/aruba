@@ -25,6 +25,43 @@ module Aruba
         args.reject! {|x| x.nil?}
         args.empty? ? %w[cmd.exe /c] + [command_with_path] : (%w[cmd.exe /c] + [command_with_path] + args).flatten
       end
+
+      # The default implementation uses Shellwords, which doesn't parse all strings correctly for Windows.
+      # Ex: given the commandline 'echo "hello world"'
+      # Shellwords.split(commandline)....   will remove the quotes around "hello world" and then
+      # when Childprocess tries to run ChildProcess(["cmd.exe", "/c", "echo", "hello","world"]) it will fail
+      # with the error message " echo hello" is not a program.....
+      # Even using Shellwords.split()Shellwords.shellescape(commandline)) doesn't work. Here's the doc
+      # from Shellwords showing that it deliberately removes the quotes around a string ("two words"):
+      #   argv = 'here are "two words"'.shellsplit
+      #   argv #=> ["here", "are", "two words"]
+      #
+      #  So this fails: 'echo "hello world"'  Shellwords.split('echo "hello world"')  ==> ["echo", "hello", "world"]
+      #  but this works: "echo 'hello world'" Shellwords.split("echo 'hello world'") ==> ["echo", "hello world"]
+
+      def command_args(whole_commandline)
+        command_parts = split_command(whole_commandline)
+        return command_parts[1..-1] if command_parts.size > 1
+      end
+
+      def split_command(line)
+          words = []
+          field = ''
+          line.scan(/\G\s*(?>([^\s\\\'\"]+)|'([^\']*)'|"((?:[^\"\\]|\\.)*)"|(\\.?)|(\S))(\s|\z)?/m) do
+          |word, sq, dq, esc, garbage, sep|
+            raise ArgumentError, "Unmatched double quote: #{line.inspect}" if garbage
+            field << (word || sq || (dq || esc).gsub(/\\(.)/, '\\1'))
+            field = "\"#{dq}\"" if dq
+            field = "'#{sq}'" if sq
+            if sep
+              words << field
+              field = ''
+            end
+          end
+          words
+
+      end
+
     end
   end
 end
