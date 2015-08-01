@@ -6,15 +6,15 @@ if Aruba::VERSION >= '1.0.0'
   Around do |_, block|
     begin
       if RUBY_VERSION < '1.9'
-        old_env = ENV.to_hash.dup
+        old_env = ENV.to_hash.dup  #FIXME: this is platform dependent
       else
-        old_env = ENV.to_h.dup
+        old_env = ENV.to_h.dup     #FIXME: this is platform dependent
       end
 
       block.call
     ensure
       ENV.clear
-      ENV.update old_env
+      ENV.update old_env #FIXME: this is platform dependent
     end
   end
 end

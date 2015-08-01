@@ -10,7 +10,7 @@ module Aruba
       @config            = Aruba.config.make_copy
       @current_directory = ArubaPath.new(@config.working_directory)
       @root_directory    = ArubaPath.new(@config.root_directory)
-      @environment       = Aruba.platform.environment_variables
+      @environment       = Aruba.platform.environment_variables  # FIXME: should rename 'environment' to 'environment_variables' or 'environment_vars'
 
       @logger      = ArubaLogger.new
       @logger.mode = @config.log_level
