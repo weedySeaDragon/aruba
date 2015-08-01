@@ -3,7 +3,7 @@ require 'securerandom'
 require 'aruba/api'
 require 'fileutils'
 
-describe Aruba::Api  do
+describe Aruba::Api do
   include_context 'uses aruba API'
 
   describe 'current_directory' do
@@ -49,7 +49,7 @@ describe Aruba::Api  do
       it { expect(all_paths).to include expand_path(name) }
     end
 
-    context 'when nothing exist' do      # FIXME: need to first delete all paths/folders/dirs
+    context 'when nothing exist' do # FIXME: need to first delete all paths/folders/dirs
       it { expect(all_paths).to eq [] }
     end
   end
@@ -125,12 +125,12 @@ describe Aruba::Api  do
   end
 
   describe '#read' do
-    let(:name) { 'test.txt'}
+    let(:name) { 'test.txt' }
     let(:path) { File.join(@aruba.aruba.current_directory, name) }
     let(:content) { 'asdf' }
 
     before :each do
-      @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
+      @aruba.set_environment_variable 'HOME', File.expand_path(@aruba.aruba.current_directory)
     end
 
     context 'when does not exist' do
@@ -184,7 +184,7 @@ describe Aruba::Api  do
     let(:path) { File.join(@aruba.aruba.current_directory, name) }
 
     before :each do
-      @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
+      @aruba.set_environment_variable 'HOME', File.expand_path(@aruba.aruba.current_directory)
     end
 
     context 'when does not exist' do
@@ -200,7 +200,7 @@ describe Aruba::Api  do
         end
 
         context 'when normal file' do
-          it { expect{ @aruba.list(name) }.to raise_error ArgumentError }
+          it { expect { @aruba.list(name) }.to raise_error ArgumentError }
         end
       end
 
@@ -216,9 +216,9 @@ describe Aruba::Api  do
         context 'when has subdirectories' do
           context 'when is simple path' do
             let(:existing_files) { @aruba.list(name) }
-            let(:expected_files) { content.map { |c| File.join(name, c) }.sort  }
+            let(:expected_files) { content.map { |c| File.join(name, c) }.sort }
 
-            it { expect(expected_files - existing_files).to be_empty}
+            it { expect(expected_files - existing_files).to be_empty }
           end
 
           context 'when path contains ~' do
@@ -229,7 +229,7 @@ describe Aruba::Api  do
             let(:existing_files) { @aruba.list(name) }
             let(:expected_files) { content.map { |c| File.join(string, c) } }
 
-            it { expect(expected_files - existing_files).to be_empty}
+            it { expect(expected_files - existing_files).to be_empty }
           end
         end
 
@@ -242,12 +242,12 @@ describe Aruba::Api  do
   end
 
   describe '#remove' do
-    let(:name) { 'test.txt'}
+    let(:name) { 'test.txt' }
     let(:path) { File.join(@aruba.aruba.current_directory, name) }
     let(:options) { {} }
 
     before :each do
-      @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
+      @aruba.set_environment_variable 'HOME', File.expand_path(@aruba.aruba.current_directory)
     end
 
     context 'when file' do
@@ -286,7 +286,7 @@ describe Aruba::Api  do
         end
 
         context 'when is forced to delete file' do
-          let(:options) { { :force => true } }
+          let(:options) { {:force => true} }
 
           it_behaves_like 'a non-existing file'
         end
@@ -331,7 +331,7 @@ describe Aruba::Api  do
         end
 
         context 'when is forced to delete directory' do
-          let(:options) { { :force => true } }
+          let(:options) { {:force => true} }
 
           it_behaves_like 'a non-existing directory'
         end
@@ -346,7 +346,7 @@ describe Aruba::Api  do
       let(:options) { {} }
 
       before :each do
-        @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
+        @aruba.set_environment_variable 'HOME', File.expand_path(@aruba.aruba.current_directory)
       end
 
       context 'when file' do
@@ -377,7 +377,7 @@ describe Aruba::Api  do
 
           context 'and the mtime should be set statically' do
             let(:time) { Time.parse('2014-01-01 10:00:00') }
-            let(:options) { { :mtime => Time.parse('2014-01-01 10:00:00') } }
+            let(:options) { {:mtime => Time.parse('2014-01-01 10:00:00')} }
 
             it_behaves_like 'an existing file'
             it { expect(File.mtime(path)).to eq time }
@@ -404,7 +404,7 @@ describe Aruba::Api  do
 
           context 'and the mtime should be set statically' do
             let(:time) { Time.parse('2014-01-01 10:00:00') }
-            let(:options) { { :mtime => Time.parse('2014-01-01 10:00:00') } }
+            let(:options) { {:mtime => Time.parse('2014-01-01 10:00:00')} }
 
             it_behaves_like 'an existing directory'
             it { Array(path).each { |p| expect(File.mtime(p)).to eq time } }
@@ -659,7 +659,7 @@ describe Aruba::Api  do
         end
 
         context 'when source is non-existing' do
-          it { expect { @aruba.copy source, destination }.to raise_error ArgumentError}
+          it { expect { @aruba.copy source, destination }.to raise_error ArgumentError }
         end
       end
     end
@@ -796,15 +796,15 @@ describe Aruba::Api  do
 
     describe '#filesystem_permissions', :unless => WINDOWS do
       def actual_permissions
-        format( "%o" , File::Stat.new(file_path).mode )[-4,4]
+        format("%o", File::Stat.new(file_path).mode)[-4, 4]
       end
 
       let(:file_name) { @file_name }
       let(:file_path) { @file_path }
-      let(:permissions) { '0666' }
+      let(:permissions) { '0655' }
 
       before :each do
-        @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
+        @aruba.set_environment_variable 'HOME', File.expand_path(@aruba.aruba.current_directory)
       end
 
       before(:each) do
@@ -842,7 +842,7 @@ describe Aruba::Api  do
       let(:permissions) { '0655' }
 
       before :each do
-        @aruba.set_environment_variable 'HOME',  File.expand_path(@aruba.aruba.current_directory)
+        @aruba.set_environment_variable 'HOME', File.expand_path(@aruba.aruba.current_directory)
       end
 
       before(:each) do
@@ -919,10 +919,10 @@ describe Aruba::Api  do
         Aruba.platform.mkdir(File.dirname(file_path))
         File.open(file_path, 'w') { |f| f << "" }
 
-        @aruba.check_file_presence([ /test123/ ], false )
-        @aruba.check_file_presence([ /hello_world.txt$/ ], true )
-        @aruba.check_file_presence([ /dir/ ], true )
-        @aruba.check_file_presence([ %r{nested/.+/} ], true )
+        @aruba.check_file_presence([/test123/], false)
+        @aruba.check_file_presence([/hello_world.txt$/], true)
+        @aruba.check_file_presence([/dir/], true)
+        @aruba.check_file_presence([%r{nested/.+/}], true)
       end
 
       it "is no problem to mix both" do
@@ -932,18 +932,18 @@ describe Aruba::Api  do
         Aruba.platform.mkdir(File.dirname(file_path))
         File.open(file_path, 'w') { |f| f << "" }
 
-        @aruba.check_file_presence([ file_name, /nested/  ], true )
-        @aruba.check_file_presence([ /test123/, 'asdf' ], false )
+        @aruba.check_file_presence([file_name, /nested/], true)
+        @aruba.check_file_presence([/test123/, 'asdf'], false)
       end
 
-      it "works with ~ in path name" do  # TODO: HOME likely won't have ~ on Windows
+      it "works with ~ in path name" do # TODO: HOME likely won't have ~ on Windows
         file_path = File.join('~', random_string)
 
         @aruba.with_environment 'HOME' => File.expand_path(@aruba.aruba.current_directory) do
           Aruba.platform.mkdir(File.dirname(File.expand_path(file_path)))
           File.open(File.expand_path(file_path), 'w') { |f| f << "" }
 
-          @aruba.check_file_presence( [ file_path ], true )
+          @aruba.check_file_presence([file_path], true)
         end
       end
     end
@@ -990,8 +990,8 @@ describe Aruba::Api  do
 
       context "#check_file_content" do
         context "with regexp" do
-          let(:matching_content){/bar/}
-          let(:non_matching_content){/nothing/}
+          let(:matching_content) { /bar/ }
+          let(:non_matching_content) { /nothing/ }
           it "succeeds if file content matches" do
             @aruba.check_file_content(@file_name, matching_content)
             @aruba.check_file_content(@file_name, matching_content, true)
@@ -1011,8 +1011,8 @@ describe Aruba::Api  do
           end
         end
         context "with string" do
-          let(:matching_content){"foo bar baz"}
-          let(:non_matching_content){"bar"}
+          let(:matching_content) { "foo bar baz" }
+          let(:non_matching_content) { "bar" }
           it "succeeds if file content matches" do
             @aruba.check_file_content(@file_name, matching_content)
             @aruba.check_file_content(@file_name, matching_content, true)
@@ -1061,25 +1061,25 @@ describe Aruba::Api  do
         it "is successful when the inner expectations match" do
           expect do
             @aruba.with_file_content @file_name do |full_content|
-              expect(full_content).to     match(/foo/)
+              expect(full_content).to match(/foo/)
               expect(full_content).not_to match(/zoo/)
             end
-          end . not_to raise_error
+          end.not_to raise_error
         end
 
-        it "raises RSpec::Expectations::ExpectationNotMetError when the inner expectations don't match"  do
+        it "raises RSpec::Expectations::ExpectationNotMetError when the inner expectations don't match" do
           expect do
             @aruba.with_file_content @file_name do |full_content|
-              expect(full_content).to     match(/zoo/)
+              expect(full_content).to match(/zoo/)
               expect(full_content).not_to match(/foo/)
             end
-          end . to raise_error RSpec::Expectations::ExpectationNotMetError
+          end.to raise_error RSpec::Expectations::ExpectationNotMetError
         end
       end
     end #with_file_content
   end
 
-  describe 'process environment' do
+  describe 'process environment', :focus => false do
     context '#with_environment' do
       it 'modifies env for block' do
         variable = 'THIS_IS_A_ENV_VAR'
@@ -1094,9 +1094,9 @@ describe Aruba::Api  do
     end
   end
 
-  describe 'tags' do
+  describe 'tags', :focus => true do
     describe '@announce_stdout' do
-      after(:each){@aruba.stop_processes!}
+      after(:each) { @aruba.stop_processes! }
       context 'enabled' do
         before :each do
           @aruba.send(:announcer).activate(:stdout)
@@ -1125,9 +1125,9 @@ describe Aruba::Api  do
     end
   end
 
-  describe "#assert_not_matching_output" do
-    before(:each){ @aruba.run_simple("echo foo", false) }
-    after(:each){ @aruba.stop_processes! }
+  describe "#assert_not_matching_output", :focus => false do
+    before(:each) { @aruba.run_simple("echo foo", false) }
+    after(:each) { @aruba.stop_processes! }
 
     it "passes when the output doesn't match a regexp" do
       @aruba.assert_not_matching_output "bar", @aruba.all_output
@@ -1135,13 +1135,13 @@ describe Aruba::Api  do
     it "fails when the output does match a regexp" do
       expect do
         @aruba.assert_not_matching_output "foo", @aruba.all_output
-      end . to raise_error RSpec::Expectations::ExpectationNotMetError
+      end.to raise_error RSpec::Expectations::ExpectationNotMetError
     end
   end
 
-  describe '#run' do
-    before(:each){@aruba.run "cat"}
-    after(:each){@aruba.stop_processes!}
+  describe '#run', :focus => true do
+    before(:each) { @aruba.run "cat" }
+    after(:each) { @aruba.stop_processes! }
     it "respond to input" do
       @aruba.type "Hello"
       @aruba.type ""
@@ -1151,20 +1151,47 @@ describe Aruba::Api  do
     it "respond to close_input" do
       @aruba.type "Hello"
       @aruba.close_input
-      expect(@aruba.all_output).to eq  "Hello\n"
+      expect(@aruba.all_output).to eq "Hello\n"
     end
 
     it "pipes data" do
       @aruba.write_file(@file_name, "Hello\nWorld!")
       @aruba.pipe_in_file(@file_name)
       @aruba.close_input
-      expect(@aruba.all_output).to eq  "Hello\nWorld!"
+      expect(@aruba.all_output).to eq "Hello\nWorld!"
+    end
+
+   it "handles single quotes in a command \"echo 'hello world'\" " do
+      result = capture(:stdout) do
+        @aruba.run_simple("echo 'hello world'", false)
+      end
+
+      expect(result).to include('hello world')
+      expect(@aruba.all_output).to include('hello world')
+   end
+
+    it "handles double quotes in a command 'echo \"hello world\"' " do
+      result = capture(:stdout) do
+        @aruba.run_simple('echo "hello world"', false)
+      end
+
+      expect(result).to include('hello world')
+      expect(@aruba.all_output).to include('hello world')
+    end
+
+    it "handles both single and quotes in the command \"echo hello \"world\" I'm here\"  " do
+      result = capture(:stdout) do
+        @aruba.run_simple("echo hello \"world\" I'm here", false)
+      end
+
+      expect(result).to include('hello world')
+      expect(@aruba.all_output).to include('hello world')
     end
   end
 
-  describe "#run_simple" do
-    before(:each){@aruba.run_simple "true"}
-    after(:each){@aruba.stop_processes!}
+  describe "#run_simple", :focus => false do
+    before(:each) { @aruba.run_simple "true" }
+    after(:each) { @aruba.stop_processes! }
     describe "get_process" do
       it "returns a process" do
         expect(@aruba.get_process("true")).not_to be(nil)
@@ -1192,35 +1219,45 @@ describe Aruba::Api  do
     end
   end
 
-  describe "#set_environment_variable" do
+  describe "#set_environment_variable", :focus => false do
     after(:each) do
       @aruba.stop_processes!
       @aruba.restore_env
     end
     it "set environment variable" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true  #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
       @aruba.run "env"
       expect(@aruba.all_output).to include("LONG_LONG_ENV_VARIABLE=true")
     end
     it "overwrites environment variable" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true  #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false  #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'false'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'false'
       @aruba.run "env"
       expect(@aruba.all_output).to include("LONG_LONG_ENV_VARIABLE=false")
     end
   end
 
-  describe "#restore_env" do
-    after(:each){@aruba.stop_processes!}
+  describe "#clear environment", :focus => false do
+    after(:each) { @aruba.stop_processes! }
+    it "clears the current 'environment'" do
+      pending
+    end
+    it "clears the environemnt so it can be updated" do
+      pending
+    end
+  end
+
+  describe "#restore_env", :broken => true do
+    after(:each) { @aruba.stop_processes! }
     it "restores environment variable" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true  # @aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true # @aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
       @aruba.restore_env
       @aruba.run "env"
       expect(@aruba.all_output).not_to include("LONG_LONG_ENV_VARIABLE")
     end
     it "restores environment variable that has been set multiple times" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true  #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false  #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'false'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'false'
       @aruba.restore_env
       @aruba.run "env"
       expect(@aruba.all_output).not_to include("LONG_LONG_ENV_VARIABLE")
