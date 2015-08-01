@@ -286,7 +286,7 @@ describe Aruba::Api do
         end
 
         context 'when is forced to delete file' do
-          let(:options) { {:force => true} }
+          let(:options) {{ :force => true }}
 
           it_behaves_like 'a non-existing file'
         end
@@ -331,7 +331,7 @@ describe Aruba::Api do
         end
 
         context 'when is forced to delete directory' do
-          let(:options) { {:force => true} }
+          let(:options) {{ :force => true }}
 
           it_behaves_like 'a non-existing directory'
         end
@@ -377,7 +377,7 @@ describe Aruba::Api do
 
           context 'and the mtime should be set statically' do
             let(:time) { Time.parse('2014-01-01 10:00:00') }
-            let(:options) { {:mtime => Time.parse('2014-01-01 10:00:00')} }
+            let(:options) {{ :mtime => Time.parse('2014-01-01 10:00:00') }}
 
             it_behaves_like 'an existing file'
             it { expect(File.mtime(path)).to eq time }
@@ -404,7 +404,7 @@ describe Aruba::Api do
 
           context 'and the mtime should be set statically' do
             let(:time) { Time.parse('2014-01-01 10:00:00') }
-            let(:options) { {:mtime => Time.parse('2014-01-01 10:00:00')} }
+            let(:options) {{ :mtime => Time.parse('2014-01-01 10:00:00') }}
 
             it_behaves_like 'an existing directory'
             it { Array(path).each { |p| expect(File.mtime(p)).to eq time } }
@@ -1079,7 +1079,7 @@ describe Aruba::Api do
     end #with_file_content
   end
 
-  describe 'process environment', :focus => false do
+  describe 'process environment' do
     context '#with_environment' do
       it 'modifies env for block' do
         variable = 'THIS_IS_A_ENV_VAR'
@@ -1094,7 +1094,7 @@ describe Aruba::Api do
     end
   end
 
-  describe 'tags', :focus => true do
+  describe 'tags' do
     describe '@announce_stdout' do
       after(:each) { @aruba.stop_processes! }
       context 'enabled' do
@@ -1139,7 +1139,7 @@ describe Aruba::Api do
     end
   end
 
-  describe '#run', :focus => true do
+  describe '#run' do
     before(:each) { @aruba.run "cat" }
     after(:each) { @aruba.stop_processes! }
     it "respond to input" do
@@ -1160,15 +1160,14 @@ describe Aruba::Api do
       @aruba.close_input
       expect(@aruba.all_output).to eq "Hello\nWorld!"
     end
-
-   it "handles single quotes in a command \"echo 'hello world'\" " do
+    it "handles single quotes in a command \"echo 'hello world'\" " do
       result = capture(:stdout) do
         @aruba.run_simple("echo 'hello world'", false)
       end
 
       expect(result).to include('hello world')
       expect(@aruba.all_output).to include('hello world')
-   end
+    end
 
     it "handles double quotes in a command 'echo \"hello world\"' " do
       result = capture(:stdout) do
@@ -1225,42 +1224,58 @@ describe Aruba::Api do
       @aruba.restore_env
     end
     it "set environment variable" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true
       @aruba.run "env"
       expect(@aruba.all_output).to include("LONG_LONG_ENV_VARIABLE=true")
     end
     it "overwrites environment variable" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'false'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false
       @aruba.run "env"
       expect(@aruba.all_output).to include("LONG_LONG_ENV_VARIABLE=false")
     end
   end
 
-  describe "#clear environment", :focus => false do
-    after(:each) { @aruba.stop_processes! }
-    it "clears the current 'environment'" do
-      pending
-    end
-    it "clears the environemnt so it can be updated" do
-      pending
-    end
-  end
-
-  describe "#restore_env", :broken => true do
+ describe "#restore_env", :broken => true do
     after(:each) { @aruba.stop_processes! }
     it "restores environment variable" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true # @aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true
       @aruba.restore_env
       @aruba.run "env"
       expect(@aruba.all_output).not_to include("LONG_LONG_ENV_VARIABLE")
     end
     it "restores environment variable that has been set multiple times" do
-      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'true'
+      @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', true
       @aruba.set_environment_variable 'LONG_LONG_ENV_VARIABLE', false #@aruba.set_env 'LONG_LONG_ENV_VARIABLE', 'false'
       @aruba.restore_env
       @aruba.run "env"
       expect(@aruba.all_output).not_to include("LONG_LONG_ENV_VARIABLE")
+    end
+ end
+
+  describe "#append_environment_variable" do
+    after(:each) do
+      @aruba.stop_processes!
+      @aruba.restore_env
+    end
+    it "append environment variable" do
+      @aruba.set_environment_variable 'ARUBA_TEST_APPEND_VAR', "value before append"
+      @aruba.append_environment_variable('ARUBA_TEST_APPEND_VAR', " - appended value")
+      @aruba.run "env"
+      expect(@aruba.all_output).to include("value before append - appended value")
+    end
+  end
+
+  describe "#prepend_environment_variable" do
+    after(:each) do
+      @aruba.stop_processes!
+      @aruba.restore_env
+    end
+    it "prepend environment variable" do
+      @aruba.set_environment_variable 'ARUBA_TEST_PREPEND_VAR', "value before prepend"
+      @aruba.prepend_environment_variable('ARUBA_TEST_PREPEND_VAR', "prepended value - ")
+      @aruba.run "env"
+      expect(@aruba.all_output).to include("prepended value - value before prepend")
     end
   end
 end # Aruba::Api
